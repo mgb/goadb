@@ -10,8 +10,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/zach-klippenstein/goadb"
-	"github.com/zach-klippenstein/goadb/wire"
+	"github.com/mgb/goadb"
+	"github.com/mgb/goadb/wire"
 )
 
 var port = flag.Int("p", adb.AdbPort, "`port` the adb server is listening on")

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zach-klippenstein/goadb/internal/errors"
-	"github.com/zach-klippenstein/goadb/wire"
+	"github.com/mgb/goadb/internal/errors"
+	"github.com/mgb/goadb/wire"
 )
 
 // MtimeOfClose should be passed to OpenWrite to set the file modification time to the time the Close

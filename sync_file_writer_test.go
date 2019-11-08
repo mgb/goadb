@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/zach-klippenstein/goadb/wire"
+	"github.com/mgb/goadb/wire"
 )
 
 func TestFileWriterWriteSingleChunk(t *testing.T) {
