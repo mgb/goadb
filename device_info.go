@@ -10,6 +10,7 @@ import (
 type DeviceInfo struct {
 	// Always set.
 	Serial string
+	State  DeviceState
 
 	// Product, device, and model are not set in the short form.
 	Product    string
@@ -25,13 +26,14 @@ func (d *DeviceInfo) IsUsb() bool {
 	return d.Usb != ""
 }
 
-func newDevice(serial string, attrs map[string]string) (*DeviceInfo, error) {
+func newDevice(serial string, state DeviceState, attrs map[string]string) (*DeviceInfo, error) {
 	if serial == "" {
 		return nil, errors.AssertionErrorf("device serial cannot be blank")
 	}
 
 	return &DeviceInfo{
 		Serial:     serial,
+		State:      state,
 		Product:    attrs["product"],
 		Model:      attrs["model"],
 		DeviceInfo: attrs["device"],
@@ -61,18 +63,22 @@ func parseDeviceShort(line string) (*DeviceInfo, error) {
 			"malformed device line, expected 2 fields but found %d", len(fields))
 	}
 
-	return newDevice(fields[0], map[string]string{})
+	return newDevice(fields[0], StateOnline, map[string]string{})
 }
 
 func parseDeviceLong(line string) (*DeviceInfo, error) {
 	fields := strings.Fields(line)
+	if len(fields) >= 2 && fields[1] == "unauthorized" {
+		return newDevice(fields[0], StateUnauthorized, parseDeviceAttributes(fields[2:]))
+	}
 	if len(fields) < 5 {
 		return nil, errors.Errorf(errors.ParseError,
 			"malformed device line, expected at least 5 fields but found %d", len(fields))
 	}
 
 	attrs := parseDeviceAttributes(fields[2:])
-	return newDevice(fields[0], attrs)
+	// TODO(minegoboom): Test some devices to see what offline listed devices look like
+	return newDevice(fields[0], StateOnline, attrs)
 }
 
 func parseDeviceAttributes(fields []string) map[string]string {
