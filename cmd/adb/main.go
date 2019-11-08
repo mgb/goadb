@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cheggaaa/pb"
+	"github.com/cheggaaa/pb/v3"
 	"github.com/mgb/goadb"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -255,13 +255,8 @@ func copyWithProgressAndStats(dst io.Writer, src io.Reader, size int, showProgre
 	if showProgress && size > 0 {
 		progress = pb.New(size)
 		// Write to stderr in case dst is stdout.
-		progress.Output = os.Stderr
-		progress.ShowSpeed = true
-		progress.ShowPercent = true
-		progress.ShowTimeLeft = true
-		progress.SetUnits(pb.U_BYTES)
+		progress.SetWriter(os.Stderr)
 		progress.Start()
-		dst = io.MultiWriter(dst, progress)
 	}
 
 	startTime := time.Now()
